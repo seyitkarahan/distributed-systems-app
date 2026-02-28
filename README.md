@@ -1,16 +1,15 @@
 # Dağıtık Sistemler Projesi
 
-Dağıtık sistem kavramlarını uygulayan bir backend projesi. Spring Boot REST API, PostgreSQL, Docker ve health/readiness kontrolleri ile tek servisli dağıtık mimari örneği sunar.
+Dağıtık sistem kavramlarını uygulayan full-stack proje: Spring Boot REST API (backend), React + TypeScript arayüzü (frontend), PostgreSQL ve Docker.
 
 ---
 
 ## Özellikler
 
-- **REST API** — Node (düğüm) CRUD işlemleri, katmanlı mimari (Controller → Service → Repository)
-- **PostgreSQL** — Kalıcı veri, JPA/Hibernate
+- **Backend** — Node CRUD REST API, katmanlı mimari (Controller → Service → Repository), PostgreSQL, Swagger
+- **Frontend** — React 19 + Vite + TypeScript (geliştirme ortamında backend’e proxy)
 - **Docker** — Backend + veritabanı tek komutla ayağa kalkar
-- **Health / Readiness / Liveness** — Dağıtık ortam için sağlık kontrolleri (trafik hazır mı, uygulama canlı mı)
-- **Swagger (OpenAPI)** — API dokümantasyonu ve istek testi
+- **Health / Readiness / Liveness** — Dağıtık ortam için sağlık kontrolleri
 - **Validation & Exception handling** — DTO validasyonu, merkezi hata yanıtları
 
 ---
@@ -20,9 +19,10 @@ Dağıtık sistem kavramlarını uygulayan bir backend projesi. Spring Boot REST
 | Bileşen        | Teknoloji                    |
 |----------------|------------------------------|
 | Backend        | Java 21, Spring Boot 3.4     |
+| Frontend       | React 19, Vite 7, TypeScript |
 | Veritabanı     | PostgreSQL 16                |
 | API dokümantasyonu | SpringDoc OpenAPI (Swagger) |
-| Derleme        | Maven                        |
+| Derleme        | Maven (backend), npm (frontend) |
 | Konteyner      | Docker, Docker Compose       |
 
 ---
@@ -33,32 +33,28 @@ Dağıtık sistem kavramlarını uygulayan bir backend projesi. Spring Boot REST
 .
 ├── README.md                 # Bu dosya
 ├── docker-compose.yml        # Backend + PostgreSQL
-└── backend/
-    ├── Dockerfile            # Çok aşamalı build (Maven → JRE)
-    ├── pom.xml
+├── backend/                  # Spring Boot API
+│   ├── Dockerfile
+│   ├── pom.xml
+│   └── src/main/...          # controller, service, repository, entity, dto, exception
+└── frontend/                 # React + Vite + TypeScript
+    ├── package.json
+    ├── vite.config.ts        # /api ve /actuator proxy → localhost:8081
+    ├── index.html
     ├── src/
-    │   ├── main/
-    │   │   ├── java/com/distributed/
-    │   │   │   ├── BackendApplication.java
-    │   │   │   ├── config/           # OpenAPI konfigürasyonu
-    │   │   │   ├── controller/       # REST endpoint'ler
-    │   │   │   ├── service/         # İş mantığı
-    │   │   │   ├── repository/      # JPA repository
-    │   │   │   ├── entity/          # JPA entity (Node)
-    │   │   │   ├── dto/request & response
-    │   │   │   └── exception/       # GlobalExceptionHandler, ErrorResponse
-    │   │   └── resources/
-    │   │       └── application.yml
-    │   └── test/
-    └── .dockerignore
+    │   ├── main.tsx
+    │   ├── App.tsx
+    │   └── ...
+    └── public/
 ```
 
 ---
 
 ## Gereksinimler
 
-- **Docker ile çalıştırmak için:** Docker ve Docker Compose
-- **Yerel çalıştırmak için:** Java 21+, Maven 3.8+, çalışan PostgreSQL
+- **Backend (Docker):** Docker ve Docker Compose
+- **Backend (yerel):** Java 21+, Maven 3.8+, PostgreSQL
+- **Frontend:** Node.js 18+ ve npm
 
 ---
 
@@ -99,6 +95,23 @@ docker compose down            # Durdur
 docker compose down -v          # Durdur + volume'ları sil (veritabanı verisi gider)
 docker compose up -d --build    # Yeniden build ve başlat
 ```
+
+---
+
+## Frontend (React) çalıştırma
+
+Backend’in çalışıyor olması gerekir (Docker veya yerel, port 8081). Sonra:
+
+```bash
+cd frontend
+npm install
+npm run dev
+```
+
+- **Arayüz:** http://localhost:5173  
+- Geliştirme sırasında `/api` ve `/actuator` istekleri Vite proxy ile http://localhost:8081’e yönlendirilir (CORS sorunu olmaz).
+
+Production build: `npm run build` (çıktı: `frontend/dist`).
 
 ---
 
