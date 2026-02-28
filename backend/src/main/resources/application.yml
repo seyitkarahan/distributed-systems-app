@@ -1,0 +1,47 @@
+server:
+  port: 8081
+  address: 0.0.0.0  # Docker içinde dışarıdan bağlantı kabul etmek için
+
+spring:
+  application:
+    name: distributed-systems-backend
+  datasource:
+    url: ${SPRING_DATASOURCE_URL:jdbc:postgresql://localhost:5432/distributed_db}
+    driver-class-name: org.postgresql.Driver
+    username: ${SPRING_DATASOURCE_USERNAME:postgres}
+    password: ${SPRING_DATASOURCE_PASSWORD}
+  jpa:
+    hibernate:
+      ddl-auto: update
+    show-sql: true
+    properties:
+      hibernate:
+        format_sql: true
+        dialect: org.hibernate.dialect.PostgreSQLDialect
+
+# Actuator: health, readiness, liveness (dağıtık sistemler için)
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info
+  endpoint:
+    health:
+      show-details: when-authorized
+      # Health grupları: readiness = trafik kabul edebilir mi, liveness = process canlı mı
+      group:
+        readiness:
+          include: db
+          show-details: when-authorized
+        liveness:
+          include: ping
+          show-details: when-authorized
+
+# Swagger / OpenAPI
+springdoc:
+  api-docs:
+    path: /v3/api-docs
+  swagger-ui:
+    path: /swagger-ui.html
+    operationsSorter: method
+    tagsSorter: alpha
