@@ -25,17 +25,14 @@ management:
     web:
       exposure:
         include: health,info
+      cors:
+        allowed-origins: "http://localhost:5173"
+        allowed-methods: "GET,OPTIONS"
   endpoint:
     health:
       show-details: when-authorized
-      # Health grupları: readiness = trafik kabul edebilir mi, liveness = process canlı mı
-      group:
-        readiness:
-          include: db
-          show-details: when-authorized
-        liveness:
-          include: ping
-          show-details: when-authorized
+      probes:
+        enabled: true
 
 # Swagger / OpenAPI
 springdoc:

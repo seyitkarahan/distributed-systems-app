@@ -16,14 +16,16 @@ Dağıtık sistem kavramlarını uygulayan full-stack proje: Spring Boot REST AP
 
 ## Teknoloji stack
 
-| Bileşen        | Teknoloji                    |
-|----------------|------------------------------|
-| Backend        | Java 21, Spring Boot 3.4     |
-| Frontend       | React 19, Vite 7, TypeScript |
-| Veritabanı     | PostgreSQL 16                |
-| API dokümantasyonu | SpringDoc OpenAPI (Swagger) |
-| Derleme        | Maven (backend), npm (frontend) |
-| Konteyner      | Docker, Docker Compose       |
+
+| Bileşen            | Teknoloji                       |
+| ------------------ | ------------------------------- |
+| Backend            | Java 21, Spring Boot 3.4        |
+| Frontend           | React 19, Vite 7, TypeScript    |
+| Veritabanı         | PostgreSQL 16                   |
+| API dokümantasyonu | SpringDoc OpenAPI (Swagger)     |
+| Derleme            | Maven (backend), npm (frontend) |
+| Konteyner          | Docker, Docker Compose          |
+
 
 ---
 
@@ -70,14 +72,16 @@ docker compose up -d
 
 ### Erişim adresleri
 
-| Ne | URL |
-|----|-----|
-| **Backend API** | http://localhost:8081 |
-| **Swagger UI** | http://localhost:8081/swagger-ui.html |
-| **OpenAPI JSON** | http://localhost:8081/v3/api-docs |
-| **Readiness** (trafik hazır mı) | http://localhost:8081/actuator/health/readiness |
-| **Liveness** (uygulama canlı mı) | http://localhost:8081/actuator/health/liveness |
-| **Genel health** | http://localhost:8081/actuator/health |
+
+| Ne                               | URL                                                                                                |
+| -------------------------------- | -------------------------------------------------------------------------------------------------- |
+| **Backend API**                  | [http://localhost:8081](http://localhost:8081)                                                     |
+| **Swagger UI**                   | [http://localhost:8081/swagger-ui.html](http://localhost:8081/swagger-ui.html)                     |
+| **OpenAPI JSON**                 | [http://localhost:8081/v3/api-docs](http://localhost:8081/v3/api-docs)                             |
+| **Readiness** (trafik hazır mı)  | [http://localhost:8081/actuator/health/readiness](http://localhost:8081/actuator/health/readiness) |
+| **Liveness** (uygulama canlı mı) | [http://localhost:8081/actuator/health/liveness](http://localhost:8081/actuator/health/liveness)   |
+| **Genel health**                 | [http://localhost:8081/actuator/health](http://localhost:8081/actuator/health)                     |
+
 
 ### PostgreSQL
 
@@ -108,8 +112,8 @@ npm install
 npm run dev
 ```
 
-- **Arayüz:** http://localhost:5173  
-- Geliştirme sırasında `/api` ve `/actuator` istekleri Vite proxy ile http://localhost:8081’e yönlendirilir (CORS sorunu olmaz).
+- **Arayüz:** [http://localhost:5173](http://localhost:5173)  
+- Geliştirme sırasında `/api` ve `/actuator` istekleri Vite proxy ile [http://localhost:8081’e](http://localhost:8081’e) yönlendirilir (CORS sorunu olmaz).
 
 Production build: `npm run build` (çıktı: `frontend/dist`).
 
@@ -118,21 +122,17 @@ Production build: `npm run build` (çıktı: `frontend/dist`).
 ## Yerel çalıştırma (Docker olmadan)
 
 1. PostgreSQL’de veritabanı oluşturun:
-
-   ```sql
+  ```sql
    CREATE DATABASE distributed_db;
-   ```
-
+  ```
 2. `backend/application.yml` içinde bağlantı bilgilerini kontrol edin (varsayılan: `localhost:5432`, kullanıcı `postgres`, şifre `postgres`).
-
 3. Backend’i başlatın:
-
-   ```bash
+  ```bash
    cd backend
    mvn spring-boot:run
-   ```
+  ```
 
-Uygulama http://localhost:8081 üzerinde çalışır.
+Uygulama [http://localhost:8081](http://localhost:8081) üzerinde çalışır.
 
 ---
 
@@ -140,28 +140,32 @@ Uygulama http://localhost:8081 üzerinde çalışır.
 
 ### Health ve sağlık kontrolleri
 
-| Method | Endpoint | Açıklama |
-|--------|----------|----------|
-| GET | `/api/health` | Basit servis durumu |
-| GET | `/actuator/health` | Tüm bileşenler (DB vb.) |
-| GET | `/actuator/health/readiness` | **Readiness:** DB bağlantısı var mı, trafik kabul edilebilir mi? |
-| GET | `/actuator/health/liveness` | **Liveness:** Uygulama canlı mı? (ping) |
+
+| Method | Endpoint                     | Açıklama                                                         |
+| ------ | ---------------------------- | ---------------------------------------------------------------- |
+| GET    | `/api/health`                | Basit servis durumu                                              |
+| GET    | `/actuator/health`           | Tüm bileşenler (DB vb.)                                          |
+| GET    | `/actuator/health/readiness` | **Readiness:** DB bağlantısı var mı, trafik kabul edilebilir mi? |
+| GET    | `/actuator/health/liveness`  | **Liveness:** Uygulama canlı mı? (ping)                          |
+
 
 Readiness ve liveness, Docker/Kubernetes gibi ortamlarda yük dengeleme ve restart kararları için kullanılır.
 
 ### Node API (CRUD)
 
-| Method | URL | Açıklama |
-|--------|-----|----------|
-| GET | `/api/nodes` | Tüm node’ları listele |
-| GET | `/api/nodes/{id}` | ID ile node getir |
-| POST | `/api/nodes` | Yeni node oluştur |
-| PUT | `/api/nodes/{id}` | Node güncelle |
-| DELETE | `/api/nodes/{id}` | Node sil |
+
+| Method | URL               | Açıklama              |
+| ------ | ----------------- | --------------------- |
+| GET    | `/api/nodes`      | Tüm node’ları listele |
+| GET    | `/api/nodes/{id}` | ID ile node getir     |
+| POST   | `/api/nodes`      | Yeni node oluştur     |
+| PUT    | `/api/nodes/{id}` | Node güncelle         |
+| DELETE | `/api/nodes/{id}` | Node sil              |
+
 
 **POST/PUT body örneği (Node):** `name`, `host`, `port` (zorunlu); `status` (isteğe bağlı: `ACTIVE`, `INACTIVE`, `MAINTENANCE`).
 
-Tüm endpoint’leri Swagger UI üzerinden deneyebilirsiniz: http://localhost:8081/swagger-ui.html
+Tüm endpoint’leri Swagger UI üzerinden deneyebilirsiniz: [http://localhost:8081/swagger-ui.html](http://localhost:8081/swagger-ui.html)
 
 ---
 
@@ -189,13 +193,11 @@ Katmanlı yapı:
 ## Sorun giderme
 
 - **Backend açılmıyor / “sayfa çalışmıyor”**  
-  Spring Boot 1–2 dakika sürebilir. Tarayıcıda doğrudan http://localhost:8081/swagger-ui.html deneyin. `docker compose logs backend` ile hata mesajlarına bakın.
-
+Spring Boot 1–2 dakika sürebilir. Tarayıcıda doğrudan [http://localhost:8081/swagger-ui.html](http://localhost:8081/swagger-ui.html) deneyin. `docker compose logs backend` ile hata mesajlarına bakın.
 - **PostgreSQL portu**  
-  Compose’da `5433:5432` ise, DB istemcisinde port **5433** kullanın.
-
+Compose’da `5433:5432` ise, DB istemcisinde port **5433** kullanın.
 - **Yeniden build**  
-  Kod veya Dockerfile değiştiyse: `docker compose up -d --build`
+Kod veya Dockerfile değiştiyse: `docker compose up -d --build`
 
 ---
 
