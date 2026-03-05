@@ -19,12 +19,11 @@ spring:
         format_sql: true
         dialect: org.hibernate.dialect.PostgreSQLDialect
 
-# Actuator: health, readiness, liveness (dağıtık sistemler için)
 management:
   endpoints:
     web:
       exposure:
-        include: health,info
+        include: health,info,prometheus
       cors:
         allowed-origins: "http://localhost:5173"
         allowed-methods: "GET,OPTIONS"
@@ -33,8 +32,13 @@ management:
       show-details: when-authorized
       probes:
         enabled: true
+    prometheus:
+      enabled: true
+  metrics:
+    export:
+      prometheus:
+        enabled: true
 
-# Swagger / OpenAPI
 springdoc:
   api-docs:
     path: /v3/api-docs

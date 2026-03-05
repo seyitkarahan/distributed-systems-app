@@ -46,6 +46,12 @@
             <artifactId>spring-boot-starter-actuator</artifactId>
         </dependency>
 
+        <!-- Micrometer Prometheus registry (Prometheus ile metric toplama) -->
+        <dependency>
+            <groupId>io.micrometer</groupId>
+            <artifactId>micrometer-registry-prometheus</artifactId>
+        </dependency>
+
         <!-- Swagger / OpenAPI (API dokümantasyonu ve istek testi) - 2.7+ Spring Boot 3.4 uyumlu -->
         <dependency>
             <groupId>org.springdoc</groupId>
