@@ -5,6 +5,12 @@ server:
 spring:
   application:
     name: distributed-systems-backend
+  data:
+    redis:
+      host: ${REDIS_HOST:localhost}
+      port: ${REDIS_PORT:6379}
+  cache:
+    type: redis
   datasource:
     url: ${SPRING_DATASOURCE_URL:jdbc:postgresql://localhost:5432/distributed_db}
     driver-class-name: org.postgresql.Driver

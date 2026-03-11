@@ -7,6 +7,8 @@ import com.distributed.entity.Node;
 import com.distributed.exception.ResourceNotFoundException;
 import com.distributed.repository.NodeRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -20,6 +22,7 @@ public class NodeService {
     private final NodeRepository nodeRepository;
 
     @Transactional(readOnly = true)
+    @Cacheable(value = "nodes", key = "'all'")
     public List<NodeResponse> findAll() {
         return nodeRepository.findAll().stream()
                 .map(this::toResponse)
@@ -27,6 +30,7 @@ public class NodeService {
     }
 
     @Transactional(readOnly = true)
+    @Cacheable(value = "nodes", key = "#id")
     public NodeResponse findById(Long id) {
         Node node = nodeRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Node", "id", id));
@@ -34,6 +38,7 @@ public class NodeService {
     }
 
     @Transactional
+    @CacheEvict(value = "nodes", allEntries = true)
     public NodeResponse create(NodeRequest request) {
         Node node = Node.builder()
                 .name(request.getName())
@@ -46,6 +51,7 @@ public class NodeService {
     }
 
     @Transactional
+    @CacheEvict(value = "nodes", allEntries = true)
     public NodeResponse update(Long id, NodeUpdateRequest request) {
         Node node = nodeRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Node", "id", id));
@@ -60,6 +66,7 @@ public class NodeService {
     }
 
     @Transactional
+    @CacheEvict(value = "nodes", allEntries = true)
     public void deleteById(Long id) {
         if (!nodeRepository.existsById(id)) {
             throw new ResourceNotFoundException("Node", "id", id);
